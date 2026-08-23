@@ -8,8 +8,8 @@ export class AlarmModel {
         this.alarm = alarm;
     }
 
-    getData(): void {
-        this.alarm.enabled = true;
+    getData(): AlarmData {
+        return this.alarm;
     }
 
     disable(): void {

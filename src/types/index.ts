@@ -13,3 +13,5 @@ export interface TimerState {
     // タイマーが有効かどうかを示すプロパティを追加
     enabled: boolean; 
 }
+
+export type AppMode = "timer" | "alarm";

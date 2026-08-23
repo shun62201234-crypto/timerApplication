@@ -1,3 +1,4 @@
+// === タイマー処理、アラーム処理、保存処理 ===
 import type { Alarm, TimerHistory } from "../models/Alarm";
 
 export class StorageService {
