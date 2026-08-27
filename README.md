@@ -11,31 +11,31 @@
 
 ## ディレクトリ構成
 ```text
-timer-ts/
+timerApplication/
 │─ document/
 │  │
-│  ├─ 仕様書
+│  ├─ 仕様書/
 │  │  ├─ 要求仕様書.md
 │  │  └─ 画面仕様書.md
 │  │
-│  ├─ 仕様書
+│  ├─ 仕様書/
 │  │  ├─ 状態遷移図.puml
-│  │  └─ 画面仕様書.md
+│  │  └─ 状態遷移図.md
 │
 │─ src/
 │  │
 │  ├─ main.ts
-│  │
-│  ├─ types/
-│  │  └─ index.ts
-│  │
-│  ├─ models/
-│  │  ├─ Timer.ts
-│  │  └─ Alarm.ts
-│  │
-│  ├─ states/
-│  │  ├─ TimerState.ts
-│  │  └─ AlarmState.ts
+   │
+   ├─ types/
+   │  └─ index.ts
+   │
+   ├─ models/
+   │  ├─ Timer.ts
+   │  └─ Alarm.ts
+   │
+   ├─ states/
+   │  ├─ TimerState.ts
+   │  └─ AlarmState.ts
    │
    ├─ services/
    │  ├─ TimerService.ts
