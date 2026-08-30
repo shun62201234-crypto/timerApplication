@@ -27,7 +27,7 @@ timerApplication/
 │  ├─ main.ts
    │
    ├─ types/
-   │  └─ index.ts
+   │  └─ type.ts
    │
    ├─ models/
    │  ├─ Timer.ts
@@ -45,7 +45,7 @@ timerApplication/
    ├─ controllers/
    │  └─ AppController.ts
    │
-   ├─ ui/
+   ├─ view/
    │  ├─ TimerView.ts
    │  ├─ AlarmView.ts
    │  └─ AlertView.ts
