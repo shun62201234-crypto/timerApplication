@@ -1,0 +1,252 @@
+@charset "UTF-8";
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-family: Arial, "Noto Sans JP", "Yu Gothic", YuGothic, sans-serif;
+    color: #000;
+}
+
+body {
+    min-height: 100vh;
+}
+
+/* --- アプリ全体 --- */
+.app {
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 24px;
+    /* text-align: center; */
+}
+
+/* --- タブ --- */
+.tabs {
+    width: 240px;
+    height: 23px;
+    margin: 0 auto;
+
+    display: flex;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.tab {
+    width: 120px;
+    height: 23px;
+
+    padding: 0;
+    border: none;
+    border-radius: 3px;
+
+    background: #d1cecf;
+    color: #fff;
+
+    font-size: 13px;
+    line-height: 23px;
+
+    cursor: pointer;
+}
+
+.tab.active {
+    background-color: #3b82ed;
+}
+
+/* --- 共通ボタン --- */
+.btn {
+    border: none;
+    border-radius: 3px;
+
+    height: 29px;
+    padding: 0 12px;
+
+    color: #fff;
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #3b82ed;
+}
+
+.btn-sisabled {
+    background: #d1cecf;
+    cursor: default;
+}
+
+/* --- タイマー画面 --- */
+.timer-screen {
+    width: 350px;
+    min-height: 265px;
+    margin: 24px auto 0;
+    position: relative;
+}
+
+.timer-display {
+    text-align: center;
+    font-size: 38px;
+    font-weight: 400;
+    letter-spacing: 2px;
+
+    line-height: 46px;
+}
+
+/* --- タイマー操作ボタン --- */
+.timer-actions {
+    margin-top: 28px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.timer-actions .btn {
+    min-width: 58px;
+}
+
+.timer-actions .cancel {
+    margin-left: 1px;
+}
+
+/* --- タイマー履歴 --- */
+.history {
+    width: 288px;
+    height: 107px;
+
+    margin: 11px auto 0;
+
+    border: 1px solid #bcbcbc;
+    background: #fff;
+}
+
+.history-title {
+    margin: 8px 0 0 13px;
+
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.history-list {
+    width: 100%;
+    height: 78px;
+}
+
+/* --- アラーム画面 --- */
+.alarm-screen {
+    width: 100%;
+    min-height: 300px;
+    margin-top: 28px;
+}
+
+.alarm-display {
+    text-align: center;
+    
+    font-size: 45px;
+    font-weight: 400;
+    letter-spacing: 2px;
+
+    line-height: 54px;
+}
+
+/* --- 保存ボタン --- */
+.save-button {
+    display: block;
+
+    width: 95px;
+    height: 29px;
+
+    margin: 18px auto 0;
+
+    font-size: 12px;
+}
+
+/* --- アラーム一覧 --- */
+.alarm-list {
+    width: 418px;
+    height: 163px;
+
+    margin: 10px auto 0;
+
+    position: relative;
+
+    border: 1px solid #bcbcbc;
+    background: #fff;
+}
+
+.alarm-title {
+    margin: 13px 0 0 16px;
+
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.alarms {
+    position: absolute;
+
+    top: 35px;
+    left: 0;
+
+    width: 100%;
+    height: 90px;
+}
+
+/* --- 削除ボタン --- */
+.delete-button {
+    position: absolute;
+
+    right: 3px;
+    bottom: 7px;
+
+    width: 70px;
+    height: 35px;
+
+    font-size: 13px;
+}
+
+
+/* --- レスポンシブ --- */
+@media (max-width: 500px) {
+    .app {
+        padding-top: 24px;
+    }
+
+    .timer-screen {
+        width: 100%;
+    }
+
+    .alarm-list {
+        width: calc(100% - 50px);
+        max-width: 418px;
+    }
+}
+
+@media (max-width: 360px) {
+    .tabs  {
+        width: 240px;
+    }
+
+    .timer-display {
+        font-size: 34px;
+    }
+
+    .alarm-display {
+        font-size: 40px;
+    }
+
+    .timer-actions {
+        gap: 7px;
+    }
+
+    .history {
+        width: calc(100% - 70px);
+    }
+
+    .alarm-list {
+        width: calc(100% - 30px);
+    }
+}

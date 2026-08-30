@@ -5,9 +5,50 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>timerapplication</title>
+    <link rel="stylesheet" href="./src/style.css">
   </head>
   <body>
-    <div id="app"></div>
+    <main class="app">
+      <!-- 切り替えタブ -->
+      <nav class="tabs">
+        <button class="tab active">タイマー</button>
+        <button class="tab">アラーム</button>
+      </nav>
+
+      <!-- タイマー画面 -->
+      <section class="timer-screen">
+        <div class="timer-display">00：00：00</div>
+
+        <div class="timer-actions">
+          <button class="btn btn-disabled">開始</button>
+          <button class="btn btn-primary">再開</button>
+          <button class="btn btn-primary cancel">キャンセル</button>
+        </div>
+
+        <div class="history">
+          <p class="history-title">タイマー履歴（最大5つ）</p>
+
+          <div class="history-list">
+            <!-- TypeScriptで履歴を追加 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- アラーム画面 -->
+      <section class="alarm-screen">
+        <div class="alarm-display">00：00</div>
+
+        <button class="btn btn-primary save-button">保存</button>
+
+        <div class="alarms">
+          <!-- TypeScriptでアラームを追加 -->
+        </div>
+
+        <button class="btn btn-disabled delete-button">削除</button>
+      </section>
+
+    </main>
+    
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
