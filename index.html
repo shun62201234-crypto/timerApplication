@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -11,43 +11,96 @@
     <main class="app">
       <!-- 切り替えタブ -->
       <nav class="tabs">
-        <button class="tab active">タイマー</button>
-        <button class="tab">アラーム</button>
+        <button id="timerTab" class="tab active" type="button">タイマー</button>
+        <button id="alarmTab" class="tab" type="button">アラーム</button>
       </nav>
 
       <!-- タイマー画面 -->
-      <section class="timer-screen">
-        <div class="timer-display">00：00：00</div>
+      <section id="timerScreen" class="timer-screen">
+        <!-- タイマー表示 -->
+        <button id="timerDisplay" class="time-display timer-display" type="button" aria-label="タイマー時間を設定">
+          <span id="timerHours">00</span>
+          <span class="colon">：</span>
+          <span id="timerMinutes">00</span>
+          <span class="colon">：</span>
+          <span id="timerSeconds">00</span>
+        </button>
 
+        <!-- タイマー操作 -->
         <div class="timer-actions">
-          <button class="btn btn-disabled">開始</button>
-          <button class="btn btn-primary">再開</button>
-          <button class="btn btn-primary cancel">キャンセル</button>
+          <button id="startButton" class="btn btn-disabled" type="button" disabled>開始</button>
+          <button id="pauseButton" class="btn btn-primary" type="button">一時停止</button>
+          <button id="cancelButton" class="btn btn-primary" type="button">キャンセル</button>
         </div>
 
+        <!-- タイマー履歴 -->
         <div class="history">
           <p class="history-title">タイマー履歴（最大5つ）</p>
 
-          <div class="history-list">
+          <div id="timerHistory" class="history-list">
             <!-- TypeScriptで履歴を追加 -->
           </div>
         </div>
       </section>
 
       <!-- アラーム画面 -->
-      <section class="alarm-screen">
-        <div class="alarm-display">00：00</div>
+      <section id="alarmScreen" class="alarm-screen" hidden>
 
-        <button class="btn btn-primary save-button">保存</button>
+        <!-- アラーム時刻 -->
+        <button id="alarmDisplay" class="time-display alarm-display" type="button">
+          <span id="alarmHours">00</span>
+          <span class="colon">：</span>
+          <span id="alarmMinutes">00</span>
+        </button>
+        
+        <!-- 追加ボタン -->
+        <button id="addAlarmButton" class="btn btn-primary add-button" type="button">追加</button>
 
-        <div class="alarms">
-          <!-- TypeScriptでアラームを追加 -->
+        <!-- アラーム一覧 -->
+        <div class="alarm-list">
+          <p class="alarm-title">アラーム一覧（最大5つ）</p>
+
+          <div id="alarmItems" class="alarms">
+            <!-- TypeScriptでアラームを追加 -->
+          </div>
+
+          <button id="deleteAlarmButton" class="btn btn-disabled delete-button" type="button">削除</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- 時刻設定モーダル -->
+    <div id="timePicker" class="time-picker-overlay" hidden>
+      <div class="time-picker">
+
+        <div class="time-picker-title">時刻を設定</div>
+        <div class="picker-container">
+          <!-- 時 -->
+          <div class="picker-column">
+            <div class="picker-label">時</div>
+            <div id="hourPicker" class="picker"></div>
+          </div>
+
+          <!-- 分 -->
+          <div class="picker-column">
+            <div class="picker-label">分</div>
+            <div id="minutePicker" class="picker"></div>
+          </div>
+
+          <!-- 秒 -->
+          <div id="secondPickerColumn" class="picker-column">
+            <div class="picker-label">秒</div>
+            <div id="secondPicker" class="picker"></div>
+          </div>
         </div>
 
-        <button class="btn btn-disabled delete-button">削除</button>
-      </section>
+        <div class="time-picker-actions">
+          <button id="pickerCancel" class="btn btn-disabled" type="button">キャンセル</button>
+          <button id="pickerConfirm" class="btn btn-primary" type="button">決定</button>
+        </div>
 
-    </main>
+      </div>
+    </div>
     
     <script type="module" src="/src/main.ts"></script>
   </body>
