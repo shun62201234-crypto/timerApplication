@@ -5,7 +5,7 @@ export function pad(value: number): string {
 }
 
 export function timeToSeconds(hours: number, minutes: number, seconds: number,): number {
-    return hours * 360 + minutes * 60 + seconds;
+    return hours * 3600 + minutes * 60 + seconds;
 }
 
 export function secondsToTime(totalSeconds: number): {
