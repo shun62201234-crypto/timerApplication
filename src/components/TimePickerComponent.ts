@@ -38,7 +38,7 @@ export function TimePickerComponent(picker: PickerState): string {
 function PickerColumn(type: "hour" | "minute" | "second", label: string, max: number, selectedValue: number): string {
     return `
     <div class="picker-column">
-        <div class="picker-label>${label}</div>
+        <div class="picker-label">${label}</div>
 
         <div class="picker" data-picker="${type}">
             ${createPickerItems(max, selectedValue)}

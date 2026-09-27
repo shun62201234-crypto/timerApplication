@@ -11,6 +11,10 @@ if (!app) {
 
 // === Render ===
 function render(): void {
+    if (!app) {
+        return;
+    }
+
     app.innerHTML = AppComponent();
 
     setupPickerScroll();
@@ -32,7 +36,7 @@ function showAlarm(): void {
 let timerInterval: number | null = null;
 
 function startTimer(): void {
-    const totalSeconds = timeToSeconds(state.timer.hours, state.timer.minutes, state.timer.seconds);
+    const totalSeconds = timeToSeconds(state.timer.hours, state.timer.minutes, state.timer.seconds,);
     if (totalSeconds <= 0) {
         return;
     }
@@ -45,10 +49,15 @@ function startTimer(): void {
             return;
         }
 
-        const currentSeconds = timeToSeconds(state.timer.hours, state.timer.minutes, state.timer.seconds);
+        const currentSeconds = timeToSeconds(state.timer.hours, state.timer.minutes, state.timer.seconds,);
 
-        if (currentSeconds <= 0) {
+        if (currentSeconds <= 1) {
+            state.timer.hours = 0;
+            state.timer.minutes = 0;
+            state.timer.seconds = 0;
+
             stopTimer();
+            render();
 
             alert("タイマーが終了しました");
             return;
@@ -102,7 +111,7 @@ function addAlarm(): void {
         return;
     }
 
-    const time = `${pad(state.alarm.hours)}: ${pad(state.alarm.minutes,)}`;
+    const time = `${pad(state.alarm.hours)}:${pad(state.alarm.minutes,)}`;
 
     state.alarm.alarms.push(time);
 
@@ -178,13 +187,17 @@ function confirmPicker(): void {
 
 // === picker Scroll ===
 function setupPickerScroll(): void {
+    if (!app) {
+        return;
+    }
+
     if (!state.picker.open) {
         return;
     }
 
-    const pickers = app?.querySelectorAll<HTMLElement>("[data-picker]",);
+    const pickers = app.querySelectorAll<HTMLElement>("[data-picker]",);
 
-    pickers?.forEach((pickers) => {
+    pickers.forEach((pickers) => {
         pickers.addEventListener("scroll", () => {
             updatePickerValue(pickers);
         },);
@@ -210,7 +223,7 @@ function updatePickerValue(container: HTMLElement,): void {
 }
 
 function getPickerValue(container: HTMLElement): number {
-    const items = Array.from(container.querySelectorAll<HTMLElement>("picture-item",),);
+    const items = Array.from(container.querySelectorAll<HTMLElement>(".picker-item",),);
 
     if (items.length === 0) {
         return 0;
@@ -256,6 +269,9 @@ function scrollPickerToSelectedValue(): void {
 }
 
 function scrollToPickerValue(type: "hour" | "minute" | "second", value: number,): void {
+    if (!app) {
+        return;
+    }
     const container = app.querySelector<HTMLElement>(`[data-picker="${type}"]`,);
 
     if(!container) {
@@ -321,9 +337,9 @@ app.addEventListener("click",(event) => {
         
         case "select-alarm": {
             const index = Number (actionElement.dataset.index,)
-        };
             selectAlarm(index);
             break;
+        };
         
         case "delete-alarm":
             deleteAlarm();

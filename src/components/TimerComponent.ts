@@ -2,7 +2,8 @@ import type { TimerState } from "../states/TimerState";
 import { pad } from "../utils/time";
 
 export function TimerComponent(timer: TimerState): string {
-    const disabled = timer.running || timerPausedDisabled(timer);
+    const startDisabled = timer.running || isTimerEmpty(timer);
+    const pauseDisabled = !timer.running;
 
     return `
     <section class="timer-screen">
@@ -15,11 +16,11 @@ export function TimerComponent(timer: TimerState): string {
         </button>
 
         <div class="timer-actions">
-            <button class="btn ${disabled ? "btn-disabled" : "btn-primary"}" data-action="start-timer" type="button" ${disabled ? "disabled": ""}>
+            <button class="btn ${startDisabled ? "btn-disabled" : "btn-primary"}" data-action="start-timer" type="button" ${startDisabled ? "disabled": ""}>
                 開始
             </button>
 
-            <button class="btn ${timer.paused ? "btn-primary" : "btn-primary"}" data-action="pause-timer" type="button">
+            <button class="btn ${pauseDisabled ? "btn-disabled" : "btn-primary"}" data-action="pause-timer" type="button" ${pauseDisabled ? "disabled": ""}>
             ${timer.paused ? "開始" : "一時停止"}
             </button>
 
@@ -38,6 +39,6 @@ export function TimerComponent(timer: TimerState): string {
     `;
 }
 
-function timerPausedDisabled(timer: TimerState): boolean {
+function isTimerEmpty(timer: TimerState): boolean {
     return (timer.hours === 0 && timer.minutes === 0 && timer.seconds === 0);
 }

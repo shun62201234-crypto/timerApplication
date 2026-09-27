@@ -4,8 +4,6 @@ import type { TimerState } from "./TimerState";
 
 export type Screen = "timer" | "alarm";
 
-export type PickerMode = "timer" | "alarm";
-
 export interface AppState {
     screen: Screen;
     timer: TimerState;
