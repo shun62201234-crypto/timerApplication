@@ -14,8 +14,8 @@ export function TimerComponent(timer: TimerState): string {
             <span>${pad(timer.seconds)}</span>
         </button>
 
-        <div class"timer-actions">
-            <button class"btn ${disabled ? "btn-disabled" : "btn-primary"}" data-action="start-timer" type="button" ${disabled ? "disabled": ""}>
+        <div class="timer-actions">
+            <button class="btn ${disabled ? "btn-disabled" : "btn-primary"}" data-action="start-timer" type="button" ${disabled ? "disabled": ""}>
                 開始
             </button>
 
