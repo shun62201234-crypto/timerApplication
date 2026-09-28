@@ -1,4 +1,4 @@
-import "./styles.css";
+import "./style.css";
 import { AppComponent } from "./components/AppComponent";
 import { state } from "./states/AppState";
 import { secondsToTime, timeToSeconds, pad } from "./utils/time";
