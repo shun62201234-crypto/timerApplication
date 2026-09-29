@@ -1,32 +1,30 @@
 import type { AlarmState } from "../states/AlarmState";
-import { pad } from "../utils/time";
+import type { PickerState } from "../states/PickerState";
+import { TimePickerComponent } from "./TimePickerComponent";
 
-export function AlarmComponent(alarm: AlarmState): string {
+export function AlarmComponent(alarm: AlarmState, picker: PickerState): string {
     const hasSelectedAlarm = alarm.selectedIndex !== null;
 
     return `
-    <section class="alarm-screen">
-        <button class="time-display alarm-display" data-action="open-alarm-picker" type="button">
-            <span>${pad(alarm.hours)}</span>
-            <span class="colon">：</span>
-            <span>${pad(alarm.minutes)}</span>
-        </button>
+        <section class="alarm-screen">
 
-        <button class="btn btn-primary add-button" data-action="add-alarm" type="button" ${alarm.alarms.length >= 5 ? "disabled" : ""}>
-            追加
-        </button>
+            ${TimePickerComponent(picker)}
 
-        <div class="alarm-list">
-            <p class="alarm-title">アラーム一覧(最大5つ)</p>
-
-            <div>${renderAlarmItems(alarm)}</div>
-
-            <button class="btn ${hasSelectedAlarm ? "btn-primary" : "btn-disabled"} delete-button" data-action="delete-alarm" type="button" ${hasSelectedAlarm ? "" : "disabled"}>
-                削除
+            <button class="btn btn-primary add-button" data-action="add-alarm" type="button" ${alarm.alarms.length >= 5 ? "disabled" : ""}>
+                追加
             </button>
-        </div>
 
-    </section>
+            <div class="alarm-list">
+                <p class="alarm-title">アラーム一覧(最大5つ)</p>
+
+                <div class="alarm-items">${renderAlarmItems(alarm)}</div>
+
+                <button class="btn ${hasSelectedAlarm ? "btn-primary" : "btn-disabled"} delete-button" data-action="delete-alarm" type="button" ${hasSelectedAlarm ? "" : "disabled"}>
+                    削除
+                </button>
+            </div>
+
+        </section>
     `;
 }
 
