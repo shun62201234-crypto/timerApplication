@@ -30,7 +30,7 @@ export const state: AppState = {
     },
 
     picker: {
-        open: false,
+        open: true,
         mode: "timer",
 
         hour: 0,

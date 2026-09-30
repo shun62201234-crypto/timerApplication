@@ -24,11 +24,24 @@ function render(): void {
 // === tab切り替え ===
 function showTimer(): void {
     state.screen = "timer";
+
+    state.picker.mode = "timer";
+    state.picker.hour =  state.timer.hours;
+    state.picker.minute = state.timer.minutes;
+    state.picker.second = state.timer.seconds;  
+    state.picker.open = true;
+
     render();
 }
 
 function showAlarm(): void {
     state.screen = "alarm";
+
+    state.picker.mode = "alarm";
+    state.picker.hour = state.alarm.hours;
+    state.picker.minute = state.alarm.minutes;
+    state.picker.second = 0;
+    state.picker.open = true;
     render();
 }
 
@@ -138,53 +151,6 @@ function deleteAlarm(): void {
     render();
 }
 
-// === TimePicker ===
-function openTimerPicker(): void {
-    state.picker.open = true;
-    state.picker.mode = "timer";
-
-    state.picker.hour = state.timer.hours;
-    state.picker.minute = state.timer.minutes;
-    state.picker.second = state.timer.seconds; 
-
-    render();
-}
-
-function openAlarmPicker(): void {
-    state.picker.open = true;
-    state.picker.mode = "alarm";
-
-    state.picker.hour = state.alarm.hours;
-    state.picker.minute = state.alarm.minutes;
-    state.picker.second = 0;
-
-    render();
-}
-
-function closePicker(): void {
-    state.picker.open = false;
-    render();
-}
-
-function confirmPicker(): void {
-    const picker = state.picker;
-
-    if (picker.mode === "timer") {
-        state.timer.hours = picker.hour;
-        state.timer.minutes = picker.minute;
-        state.timer.seconds = picker.second;
-
-        state.timer.paused = false;
-    } else {
-        state.alarm.hours = picker.hour;
-        state.alarm.minutes = picker.minute;
-    }
-
-    picker.open = false;
-
-    render();
-}
-
 // === picker Scroll ===
 function setupPickerScroll(): void {
     if (!app || !state.picker.open) {
@@ -193,13 +159,13 @@ function setupPickerScroll(): void {
 
     const pickers = app.querySelectorAll<HTMLElement>("[data-picker]",);
 
-    pickers.forEach((pickers) => {
-        pickers.addEventListener("scroll", () => {
-            updatePickerValue(pickers);
-            updatePickerSelectedValue(pickers);
+    pickers.forEach((picker) => {
+        picker.addEventListener("scroll", () => {
+            updatePickerValue(picker);
+            updatePickerSelectedStyle(picker);
         },);
 
-        updatePickerSelectedStyle(pickers);
+        updatePickerSelectedStyle(picker);
     });
 }
 
@@ -234,8 +200,7 @@ function updatePickerSelectedStyle(
 
     const containerRect = container.getBoundingClientRect();
 
-    const containerCenter =
-        containerRect.top + containerRect.height / 2;
+    const containerCenter = containerRect.top + containerRect.height / 2;
 
     let closestItem = items[0];
     let closestDistance = Infinity;
@@ -243,8 +208,7 @@ function updatePickerSelectedStyle(
     for (const item of items) {
         const rect = item.getBoundingClientRect();
 
-        const itemCenter =
-            rect.top + rect.height / 2;
+        const itemCenter = rect.top + rect.height / 2;
 
         const distance = Math.abs(
             itemCenter - containerCenter,
@@ -362,14 +326,6 @@ app.addEventListener("click",(event) => {
             cancelTimer();
             break;
         
-        case "open-timer-picker":
-            openTimerPicker();
-            break;
-            
-        case "open-alarm-picker":
-            openAlarmPicker();
-            break;
-        
         case "add-alarm":
             addAlarm();
             break;
@@ -383,25 +339,8 @@ app.addEventListener("click",(event) => {
         case "delete-alarm":
             deleteAlarm();
             break;
-        
-        case "picker-cancel":
-            closePicker();
-            break;
-        
-        case "picker-confirm":
-            confirmPicker();
-            break;
     }
 });
-
-// === Picker　背景クリック ===
-app.addEventListener("click", (event) => {
-    const target = event.target as HTMLElement;
-
-    if (target.id === "timePicker") {
-        closePicker();
-    }
-},);
 
 // === 初期表示 ===
 render();
