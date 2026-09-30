@@ -3,7 +3,13 @@ import type { PickerState } from "../states/PickerState";
 import { TimePickerComponent } from "./TimePickerComponent";
 
 export function TimerComponent(timer: TimerState, picker: PickerState): string {
-    const startDisabled = timer.running || isTimerEmpty(timer);
+    /**  ピッカーで現在選択されている値。
+     * ピッカーを開いている間は picker の値を使う。閉じている場合も、通常は timer と同期している。
+     */
+    const selectedTotal = picker.hour * 3600 + picker.minute * 60 + picker.second;
+    /** 00:00:00 の場合は開始できない。すでに動作中の場合も開始できない。*/
+    const startDisabled = timer.running || selectedTotal <= 0;
+    /** */
     const pauseDisabled = !timer.running;
 
     return `
@@ -33,8 +39,4 @@ export function TimerComponent(timer: TimerState, picker: PickerState): string {
 
         </section>
     `;
-}
-
-function isTimerEmpty(timer: TimerState): boolean {
-    return (timer.hours === 0 && timer.minutes === 0 && timer.seconds === 0);
 }

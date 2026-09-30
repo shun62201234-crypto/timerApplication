@@ -24,24 +24,27 @@ function render(): void {
 // === tab切り替え ===
 function showTimer(): void {
     state.screen = "timer";
-
+    /** タイマー画面に戻ったら、現在のタイマー値をピッカーにコピーする。*/
     state.picker.mode = "timer";
     state.picker.hour =  state.timer.hours;
     state.picker.minute = state.timer.minutes;
-    state.picker.second = state.timer.seconds;  
-    state.picker.open = true;
+    state.picker.second = state.timer.seconds;
+    /** タブ切り替え時はピッカーを閉じる。 */
+    state.picker.open = false;
 
     render();
 }
 
 function showAlarm(): void {
     state.screen = "alarm";
-
+    /** アラーム画面に戻ったら、現在のアラーム設定値をピッカーにコピーする。*/
     state.picker.mode = "alarm";
     state.picker.hour = state.alarm.hours;
     state.picker.minute = state.alarm.minutes;
     state.picker.second = 0;
-    state.picker.open = true;
+    /** タブ切り替え時はピッカーを閉じる。*/
+    state.picker.open = false;
+
     render();
 }
 
@@ -50,12 +53,25 @@ let timerInterval: number | null = null;
 
 function startTimer(): void {
     const totalSeconds = timeToSeconds(state.timer.hours, state.timer.minutes, state.timer.seconds,);
+    /** 00:00:00なら開始しない。*/
     if (totalSeconds <= 0) {
         return;
     }
 
+    /** ピッカーの値を実際のタイマーへ確定。*/
+    state.timer.hours = state.picker.hour;
+    state.timer.minutes = state.picker.minute;
+    state.timer.seconds = state.picker.second;
     state.timer.running = true;
     state.timer.paused = false;
+    /** タイマー開始時はピッカーを閉じる。*/
+    state.picker.open = false;
+
+    /** 既存のintervalがあれば停止*/
+    if (timerInterval !== null) {
+        window.clearInterval(timerInterval);
+        timerInterval = null;
+    }
 
     timerInterval = window.setInterval(() => {
         if (state.timer.paused) {
@@ -64,10 +80,16 @@ function startTimer(): void {
 
         const currentSeconds = timeToSeconds(state.timer.hours, state.timer.minutes, state.timer.seconds,);
 
+        /** 終了 */
         if (currentSeconds <= 1) {
             state.timer.hours = 0;
             state.timer.minutes = 0;
             state.timer.seconds = 0;
+
+            /** ピッカー側も00:00:00へ同期。*/
+            state.picker.hour = 0;
+            state.picker.minute = 0;
+            state.picker.second = 0;
 
             stopTimer();
             render();
@@ -80,6 +102,11 @@ function startTimer(): void {
         state.timer.hours = next.hours;
         state.timer.minutes = next.minutes;
         state.timer.seconds = next.seconds;
+
+        /** ピッカー側も現在値に同期 */
+        state.picker.hour = next.hours;
+        state.picker.minute = next.minutes;
+        state.picker.second = next.seconds;
 
         render();
     }, 1000);
@@ -115,6 +142,11 @@ function cancelTimer(): void {
     state.timer.paused = false;
     state.timer.running = false;
 
+    /** ピッカーも00:00:00へ戻す。*/
+    state.picker.hour = 0;
+    state.picker.minute = 0;
+    state.picker.second = 0;
+
     render();
 }
 
@@ -124,9 +156,16 @@ function addAlarm(): void {
         return;
     }
 
-    const time = `${pad(state.alarm.hours)}:${pad(state.alarm.minutes,)}`;
+    /** ピッカーで設定した値を使用 */
+    const time = `${pad(state.picker.hour)}:${pad(state.picker.minute)}`;
 
     state.alarm.alarms.push(time);
+    
+    /** アラーム側の現在値も更新 */
+    state.alarm.hours = state.picker.hour;
+    state.alarm.minutes = state.picker.minute;
+    /** 追加後はピッカーを閉じる*/
+    state.picker.open = false;
 
     render();
 }
@@ -151,6 +190,29 @@ function deleteAlarm(): void {
     render();
 }
 
+// === TimePicker ===
+function openPicker(): void {
+    /** すでに開いている場合は何もしない。*/
+    if (state.picker.open) {
+        return;
+    }
+
+    state.picker.open = true;
+
+    /** 現在の画面に合わせてmodeを変更。*/
+    if (state.screen === "timer") {
+        state.picker.hour = state.timer.hours;
+        state.picker.minute = state.timer.minutes;
+        state.picker.second = state.timer.seconds;
+    } else {
+        state.picker.hour = state.alarm.hours;
+        state.picker.minute = state.alarm.minutes;
+        state.picker.second = 0;
+    }
+
+    render();
+}
+
 // === picker Scroll ===
 function setupPickerScroll(): void {
     if (!app || !state.picker.open) {
@@ -169,6 +231,7 @@ function setupPickerScroll(): void {
     });
 }
 
+/** スクロール位置から現在選択されている数字を取得する */
 function updatePickerValue(container: HTMLElement,): void {
     const type = container.dataset.picker;
 
@@ -187,6 +250,7 @@ function updatePickerValue(container: HTMLElement,): void {
     }
 }
 
+/** 中央に一番近い数字だけを selected にする */
 function updatePickerSelectedStyle(
     container: HTMLElement,
 ): void {
@@ -228,6 +292,7 @@ function updatePickerSelectedStyle(
     });
 }
 
+/** ピッカー中央にある値を取得する */
 function getPickerValue(container: HTMLElement): number {
     const items = Array.from(container.querySelectorAll<HTMLElement>(".picker-item",),);
 
@@ -259,6 +324,7 @@ function getPickerValue(container: HTMLElement): number {
     return Number(closestItem.dataset.value ?? 0);
 }
 
+/** Picker 初期スクロール */
 function scrollPickerToSelectedValue(): void {
     if (!state.picker.open) {
         return;
@@ -274,6 +340,7 @@ function scrollPickerToSelectedValue(): void {
     });
 }
 
+/** 3周ある数字のうち、真ん中の周にある値へスクロールする */
 function scrollToPickerValue(type: "hour" | "minute" | "second", value: number,): void {
     if (!app) {
         return;
@@ -284,13 +351,21 @@ function scrollToPickerValue(type: "hour" | "minute" | "second", value: number,)
         return;
     }
 
-    const item = container.querySelector<HTMLElement>(`[data-value="${value}"]`,);
+    const items = Array.from(container.querySelectorAll<HTMLElement>("picker-item",),);
 
-    if (!item) {
+    const matchingItems = items.filter((item) => Number(item.dataset.value,) === value,);
+
+    if (matchingItems.length === 0) {
         return;
     }
 
+    /** 3周あるので、[0] = 1周目 [1] = 2周目 [2] = 3周目 真ん中の2周目を使用。*/
+    const item = matchingItems[1] ?? matchingItems[0];
+
     container.scrollTop = item.offsetTop - (container.clientHeight / 2) + (item.clientHeight / 2);
+
+    /** 初期状態の selected も更新 */
+    updatePickerSelectedStyle(container,);
 }
 
 // === Click Event ===
@@ -312,6 +387,10 @@ app.addEventListener("click",(event) => {
         
         case "show-alarm":
             showAlarm();
+            break;
+
+        case "open-picker":
+            openPicker();
             break;
         
         case "start-timer":

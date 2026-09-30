@@ -5,12 +5,14 @@ import { TimePickerComponent } from "./TimePickerComponent";
 export function AlarmComponent(alarm: AlarmState, picker: PickerState): string {
     const hasSelectedAlarm = alarm.selectedIndex !== null;
 
+    const addDisabled = alarm.alarms.length >= 5;
+
     return `
         <section class="alarm-screen">
 
             ${TimePickerComponent(picker)}
 
-            <button class="btn btn-primary add-button" data-action="add-alarm" type="button" ${alarm.alarms.length >= 5 ? "disabled" : ""}>
+            <button class="btn ${addDisabled ? "btn-disabled": "btn-primary"} add-button" data-action="add-alarm" type="button" ${addDisabled ? "disabled" : ""}>
                 追加
             </button>
 
