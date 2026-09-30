@@ -187,11 +187,7 @@ function confirmPicker(): void {
 
 // === picker Scroll ===
 function setupPickerScroll(): void {
-    if (!app) {
-        return;
-    }
-
-    if (!state.picker.open) {
+    if (!app || !state.picker.open) {
         return;
     }
 
@@ -200,7 +196,10 @@ function setupPickerScroll(): void {
     pickers.forEach((pickers) => {
         pickers.addEventListener("scroll", () => {
             updatePickerValue(pickers);
+            updatePickerSelectedValue(pickers);
         },);
+
+        updatePickerSelectedStyle(pickers);
     });
 }
 
@@ -220,6 +219,49 @@ function updatePickerValue(container: HTMLElement,): void {
     if (type === "second") {
         state.picker.second = value;
     }
+}
+
+function updatePickerSelectedStyle(
+    container: HTMLElement,
+): void {
+    const items = Array.from(
+        container.querySelectorAll<HTMLElement>(".picker-item"),
+    );
+
+    if (items.length === 0) {
+        return;
+    }
+
+    const containerRect = container.getBoundingClientRect();
+
+    const containerCenter =
+        containerRect.top + containerRect.height / 2;
+
+    let closestItem = items[0];
+    let closestDistance = Infinity;
+
+    for (const item of items) {
+        const rect = item.getBoundingClientRect();
+
+        const itemCenter =
+            rect.top + rect.height / 2;
+
+        const distance = Math.abs(
+            itemCenter - containerCenter,
+        );
+
+        if (distance < closestDistance) {
+            closestDistance = distance;
+            closestItem = item;
+        }
+    }
+
+    items.forEach((item) => {
+        item.classList.toggle(
+            "selected",
+            item === closestItem,
+        );
+    });
 }
 
 function getPickerValue(container: HTMLElement): number {
@@ -284,10 +326,7 @@ function scrollToPickerValue(type: "hour" | "minute" | "second", value: number,)
         return;
     }
 
-    item.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-    });
+    container.scrollTop = item.offsetTop - (container.clientHeight / 2) + (item.clientHeight / 2);
 }
 
 // === Click Event ===
