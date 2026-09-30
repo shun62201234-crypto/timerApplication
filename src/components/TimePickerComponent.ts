@@ -3,19 +3,24 @@ import type { PickerState } from "../states/PickerState";
 
 export function TimePickerComponent(picker: PickerState): string {
     /*
-     * picker.open === false
-     * 通常状態。00:00:00 のように中央の値だけ表示する。
-     */
-    if (!picker.open) {
-        return renderClosedPicker(picker);
-    }
-
-    /*
      * picker.open === true
      * 同じ場所でピッカーを展開する。
      */
     const showSeconds = picker.mode === "timer";
 
+    // ピッカーを閉じている状態
+    if (!picker.open) {
+        return `
+            <button class="time-picker-closed" data-action="open-picker" type="button" aria-label="時間を設定">
+                <span class="time-value">${pad(picker.hour)}</span>
+                <span class="picker-colon">：</span>
+                <span class="time-value">${pad(picker.minute)}</span>
+                ${showSeconds ? `<span class="picker-colon">：</span> <span class="time-value">${pad(picker.second)}</span> `: ""}
+            </button>
+        `;
+    }
+
+    /** ピッカーを開いている状態 */
     return `
         <div class="time-picker active">
             <div class="picker-container">
@@ -25,23 +30,6 @@ export function TimePickerComponent(picker: PickerState): string {
                 ${showSeconds ? `<span class="picker-colon">：</span> ${PickerColumn("second", 60, picker.second,)}`: ""}
             </div>
         </div>
-    `;
-}
-
-/** ピッカーを開いていない通常状態 */
-function renderClosedPicker(picker: PickerState,): string {
-    const showSceconds = picker.mode === "timer";
-
-    return `
-        <button class="time-picker-closed" data-action="open-picker" type="button" aria-label="時間を設定">
-            <span>${pad(picker.hour)}</span>
-            <span class="picker-colon">：</span>
-            <span>${pad(picker.minute)}</span>
-            ${showSceconds ? `
-                <span class="picker-colon">：</span>
-                <span>${pad(picker.second)}</span>
-            `: ""}
-        </button>
     `;
 }
 
