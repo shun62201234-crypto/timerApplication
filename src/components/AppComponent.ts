@@ -12,7 +12,6 @@ export function AppComponent(): string {
 
             ${state.screen === "timer" ? TimerComponent(state.timer, state.picker) : AlarmComponent(state.alarm, state.picker)}
 
-            ${TimePickerComponent(state.picker)}
         </main>
     `;
 }
