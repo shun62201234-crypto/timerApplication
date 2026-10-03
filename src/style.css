@@ -92,10 +92,11 @@ body {
     margin: 0 auto;
 }
 
-/* タイマー・時間表示 */
-.time-picker-close {
+/* === 閉じている状態の時間表示 === */
+/* 初期状態 00 ： 00 ： 00 を画面中央に表示 */
+.time-picker-closed {
     width: 100%;
-    height: 96px;
+    height: 126px;
 
     margin: 0;
     padding: 0;
@@ -111,20 +112,38 @@ body {
     font-family: Arial, "Noto Sans JP", "Yu Gothic", YuGothic, sans-serif;
     font-size: 38px;
     font-weight: 400;
+    line-height: 1;
 
     letter-spacing: 2px;
     cursor: pointer;
+    appearance: none;
 }
 
-/* タイマーの場合 */
-.time-picker-close .picker-column {
-    margin: 0 2px;
+/* 時・分・秒 */
+.time-picker-closed .time-value {
+    width: 58px;
+    /* display: inline-flex; */
+
+    justify-content: center;
+    align-items: center;
 }
 
-/* アラームの場合 */
-.alarm-screen .time-picker-close {
-    font-size: 45px;
+/* コロン */
+.time-picker-closed .picker-colon {
+    width: 20px;
+    /* height: auto; */
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #000;
+
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1;
 }
+
 
 /* === タイマー操作ボタン === */
 .timer-actions {
@@ -169,6 +188,15 @@ body {
 .alarm-screen {
     width: 100%;
     margin: 0 auto;
+}
+
+/* アラームの閉じた時間表示 */
+.alarm-screen .time-picker-closed {
+    font-size: 45px;
+}
+
+.alarm-screen .time-picker-closed .picker-colon {
+    font-size: 45px;
 }
 
 /* === アラーム追加ボタン === */
@@ -265,7 +293,7 @@ body {
     background: transparent;
 }
 
-/* === 時間ピッカーの3列 === */
+/* === ピッカー全体 === */
 .picker-container {
     height: 126px;
 
@@ -273,10 +301,10 @@ body {
     justify-content: center;
     align-items: center;
 
-    gap: 4px;
+    gap: 2px;
 }
 
-/* 時・分・秒それぞれの列 */
+/* === 時・分・秒それぞれの列 === */
 .picker-column {
     width: 58px;
     height: 126px;
@@ -287,7 +315,7 @@ body {
 
 /* === スクロールする領域 === */
 .picker {
-    width: 52px;
+    width: 58px;
     height: 126px;
 
     margin: 0;
@@ -307,9 +335,8 @@ body {
     display: none;
 }
 
-/* === ピッカー項目 === */
+/* === ピッカーの数字 === */
 .picker-item {
-    height: 58px;
     height: 42px;
 
     display: flex;
@@ -330,12 +357,17 @@ body {
 }
 
 /* 中央に来た数字 */
-.picker-item.selected {
+.picker-item .selected {
     color: #000;
 
     font-size: 38px;
     font-weight: 400;
     background: transparent;
+}
+
+.picker-spacer {
+    height: 42px;
+    flex-shrink: 0;
 }
 
 /* === タイマー用ピッカー === */
@@ -356,67 +388,24 @@ body {
     font-size: 45px;
 }
 
-/* 閉じた状態の時間表示 */
-.time-picker-close {
-    width: 100%;
+/* === ピッカーのコロン === */
+.time-picker .picker-colon {
+    width: 20px;
     height: 126px;
-
-    margin: 0;
-    padding: 0;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    border: none;
-    background: transparent;
-
-    color: #000;
-    font-family: Arial, "Noto Sans JP", "Yu Gothic", YuGothic, sans-serif;
-
-    letter-spacing: 0;
-
-    cursor: pointer;
-}
-
-/* 数字 */
-.time-picker-close .time-value {
-    display: inline-flex;
-
-    justify-content: center;
-    align-items: center;
-
-    width: 58px;
-}
-
-/* === コロン === */
-.time-picker-close .picker-colon {
-    width: 20px;
-    height: auto;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
     color: #000;
 
-    font-size: 30px;
+    font-size: 38px;
+    font-weight: 400;
+
     line-height: 1;
 }
 
-
-/* タイマーのコロン */
-.timer-screen .time-picker-close {
-    font-size: 38px;
-}
-
-
-/* アラームのコロン */
-.alarm-screen .time-picker-close {
-    font-size: 45px;
-}
-
-.alarm-screen .time-picker-close .picker-colon {
+.alarm-screen .time-picker .picker-colon {
     font-size: 45px;
 }
 
@@ -433,11 +422,15 @@ body {
 }
 
 @media (max-width: 360px) {
-    .timer-screen .time-picker-close {
+    .timer-screen .time-picker-closed {
         font-size: 34px;
     }
 
-    .alarm-screen .time-picker-close {
+    .alarm-screen .time-picker-closed {
+        font-size: 40px;
+    }
+
+    .alarm-screen .time-picker-closed .picker-colon {
         font-size: 40px;
     }
 
@@ -468,7 +461,6 @@ body {
     .picker-container {
         gap: 0;
     }
-
     
 }
 

@@ -38,7 +38,9 @@ function PickerColumn(type: "hour" | "minute" | "second", max: number, selectedV
     return `
         <div class="picker-column">
             <div class="picker" data-picker="${type}">
+                <div class="picker-spacer"></div>
                 ${createPickerItems(max, selectedValue)}
+                <div class="picker-spacer"></div>
             </div>
         </div>
     `;

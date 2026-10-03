@@ -52,7 +52,7 @@ function showAlarm(): void {
 let timerInterval: number | null = null;
 
 function startTimer(): void {
-    const totalSeconds = timeToSeconds(state.timer.hours, state.timer.minutes, state.timer.seconds,);
+    const totalSeconds = timeToSeconds(state.picker.hour, state.picker.minute, state.picker.second,);
     /** 00:00:00なら開始しない。*/
     if (totalSeconds <= 0) {
         return;
@@ -197,8 +197,6 @@ function openPicker(): void {
         return;
     }
 
-    state.picker.open = true;
-
     /** 現在の画面に合わせてmodeを変更。*/
     if (state.screen === "timer") {
         state.picker.hour = state.timer.hours;
@@ -210,10 +208,14 @@ function openPicker(): void {
         state.picker.second = 0;
     }
 
+    state.picker.open = true;
+
     render();
 }
 
 // === picker Scroll ===
+let isPositioningPicker = false;
+
 function setupPickerScroll(): void {
     if (!app || !state.picker.open) {
         return;
@@ -223,11 +225,15 @@ function setupPickerScroll(): void {
 
     pickers.forEach((picker) => {
         picker.addEventListener("scroll", () => {
+            /** 初期位置を設定している途中はstateを変更しない。*/
+            if (isPositioningPicker) {
+                return;
+            }
+
             updatePickerValue(picker);
             updatePickerSelectedStyle(picker);
+            updateStartButtonState();
         },);
-
-        updatePickerSelectedStyle(picker);
     });
 }
 
@@ -248,6 +254,32 @@ function updatePickerValue(container: HTMLElement,): void {
     if (type === "second") {
         state.picker.second = value;
     }
+}
+
+/** 開始ボタンの状態を更新 */
+function updateStartButtonState(): void {
+    if (!app) {
+        return;
+    }
+
+    if (state.screen !== "timer" || !state.picker.open) {
+        return;
+    }
+
+    const button = app.querySelector<HTMLButtonElement>(`[data-action="start-timer"]`,);
+
+    if (!button) {
+        return;
+    }
+
+    const totalSeconds = timeToSeconds(state.picker.hour, state.picker.minute, state.picker.second,);
+
+    const disabled = state.timer.running || totalSeconds <= 0;
+
+    button.disabled = disabled;
+
+    button.classList.toggle("btn-disabled", disabled);
+    button.classList.toggle("btn-primary", !disabled);
 }
 
 /** 中央に一番近い数字だけを selected にする */
@@ -330,6 +362,8 @@ function scrollPickerToSelectedValue(): void {
         return;
     }
 
+    isPositioningPicker = true;
+
     requestAnimationFrame(() => {
         scrollToPickerValue("hour", state.picker.hour);
         scrollToPickerValue("minute", state.picker.minute);
@@ -337,6 +371,18 @@ function scrollPickerToSelectedValue(): void {
         if (state.picker.mode === "timer") {
             scrollToPickerValue("second", state.picker.second);
         }
+
+        requestAnimationFrame(() => {
+
+            const pickers = app?.querySelectorAll<HTMLElement>("[data-picker]",);
+
+            pickers?.forEach((picker) =>{
+                updatePickerSelectedStyle(picker);
+            });
+            isPositioningPicker = false;
+
+            updateStartButtonState();
+        });
     });
 }
 
@@ -351,21 +397,43 @@ function scrollToPickerValue(type: "hour" | "minute" | "second", value: number,)
         return;
     }
 
-    const items = Array.from(container.querySelectorAll<HTMLElement>("picker-item",),);
+    const itemHeight = 42;
+    const spacerHeight = 42;
 
-    const matchingItems = items.filter((item) => Number(item.dataset.value,) === value,);
+    const max = type === "hour" ? 24: 60;
 
-    if (matchingItems.length === 0) {
-        return;
-    }
+    const middleCycleStart = spacerHeight + max * itemHeight;
 
-    /** 3周あるので、[0] = 1周目 [1] = 2周目 [2] = 3周目 真ん中の2周目を使用。*/
-    const item = matchingItems[1] ?? matchingItems[0];
+    const itemTop = middleCycleStart + value * itemHeight;
 
-    container.scrollTop = item.offsetTop - (container.clientHeight / 2) + (item.clientHeight / 2);
+    const scrollTop = itemTop - (container.clientHeight - itemHeight) /2;
 
-    /** 初期状態の selected も更新 */
-    updatePickerSelectedStyle(container,);
+    const originalSnap = container.style.scrollSnapType;
+
+    container.style.scrollSnapType;
+
+    container.scrollTop = scrollTop;
+
+    const items = Array.from(container.querySelectorAll<HTMLElement>(".picker-item",),);
+
+    let valueCount = 0;
+
+    items.forEach((item) => {
+        const itemValue = Number(item.dataset.value ?? 0);
+
+        let selected = false;
+
+        if (itemValue === value) {
+            valueCount++;
+        }
+
+        item.classList.toggle("selected", selected);
+    });
+
+    requestAnimationFrame(() =>{
+        container.style.scrollSnapType = originalSnap || "y mandatory";
+    });
+
 }
 
 // === Click Event ===
