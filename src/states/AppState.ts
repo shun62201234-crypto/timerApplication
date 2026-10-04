@@ -20,6 +20,7 @@ export const state: AppState = {
         seconds: 0,
         paused: false,
         running: false,
+        history: [],
     },
 
     alarm: {
@@ -27,6 +28,7 @@ export const state: AppState = {
         minutes: 0,
         alarms: [],
         selectedIndex: null,
+        history: [],
     },
 
     picker: {

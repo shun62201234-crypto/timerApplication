@@ -19,7 +19,11 @@ export function AlarmComponent(alarm: AlarmState, picker: PickerState): string {
             <div class="alarm-list">
                 <p class="alarm-title">アラーム一覧(最大5つ)</p>
 
-                <div class="alarm-items">${renderAlarmItems(alarm)}</div>
+                <div class="alarm-items">
+                    <div class="alarm-column">${renderAlarmItems(alarm, 0, 3)}</div>
+                    <div class="alarm-column">${renderAlarmItems(alarm, 3, 5)}</div>
+
+                </div>
 
                 <button class="btn ${hasSelectedAlarm ? "btn-primary" : "btn-disabled"} delete-button" data-action="delete-alarm" type="button" ${hasSelectedAlarm ? "" : "disabled"}>
                     削除
@@ -30,12 +34,13 @@ export function AlarmComponent(alarm: AlarmState, picker: PickerState): string {
     `;
 }
 
-function renderAlarmItems(alarm: AlarmState): string {
-    return alarm.alarms.map((time, index) => {
+function renderAlarmItems(alarm: AlarmState, startIndex: number, endIndex: number): string {
+    return alarm.alarms.slice(startIndex, endIndex).map((time, index) => {
+        const actualIndex = startIndex + index;
         const selected = index === alarm.selectedIndex;
 
         return `
-            <button class="alarm-item ${selected ? "selected" : ""}" data-action="select-alarm" data-index="${index}" type="button">
+            <button class="alarm-item ${selected ? "selected" : ""}" data-action="select-alarm" data-index="${actualIndex}" type="button">
                 ${time}
             </button>
         `;

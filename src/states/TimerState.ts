@@ -4,6 +4,7 @@ export interface TimerState {
     seconds: number
     paused: boolean;
     running: boolean;
+    history: string[];
 }
 
 

@@ -34,9 +34,17 @@ export function TimerComponent(timer: TimerState, picker: PickerState): string {
             <div class="history">
                 <p class="history-title">タイマー履歴（最大5つ）</p>
 
-                <div id="timerHistory" class="history-list"></div>
+                <div id="timerHistory" class="history-list">${renderTimerHistory(timer)}</div>
             </div>
 
         </section>
     `;
+}
+
+function renderTimerHistory(timer: TimerState): string {
+    return timer.history.map((time) => {
+        return `
+            <div class="history-item">${time}</div>
+        `;
+    }).join("");
 }
