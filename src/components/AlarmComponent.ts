@@ -3,7 +3,7 @@ import type { PickerState } from "../states/PickerState";
 import { TimePickerComponent } from "./TimePickerComponent";
 
 export function AlarmComponent(alarm: AlarmState, picker: PickerState): string {
-    const hasSelectedAlarm = alarm.selectedIndex !== null;
+    const hasSelectedAlarm = alarm.selectedIndexs.length > 0;
 
     const addDisabled = alarm.alarms.length >= 5;
 
@@ -22,7 +22,6 @@ export function AlarmComponent(alarm: AlarmState, picker: PickerState): string {
                 <div class="alarm-items">
                     <div class="alarm-column">${renderAlarmItems(alarm, 0, 3)}</div>
                     <div class="alarm-column">${renderAlarmItems(alarm, 3, 5)}</div>
-
                 </div>
 
                 <button class="btn ${hasSelectedAlarm ? "btn-primary" : "btn-disabled"} delete-button" data-action="delete-alarm" type="button" ${hasSelectedAlarm ? "" : "disabled"}>
@@ -35,14 +34,20 @@ export function AlarmComponent(alarm: AlarmState, picker: PickerState): string {
 }
 
 function renderAlarmItems(alarm: AlarmState, startIndex: number, endIndex: number): string {
-    return alarm.alarms.slice(startIndex, endIndex).map((time, index) => {
+    return alarm.alarms.slice(startIndex, endIndex).map((item, index) => {
         const actualIndex = startIndex + index;
-        const selected = index === alarm.selectedIndex;
+        const selected = alarm.selectedIndexs.includes(actualIndex);
 
         return `
-            <button class="alarm-item ${selected ? "selected" : ""}" data-action="select-alarm" data-index="${actualIndex}" type="button">
-                ${time}
-            </button>
+            <div class="alarm-row">
+                <button class="alarm-item ${selected ? "selected" : ""}" data-action="select-alarm" data-index="${actualIndex}" type="button">
+                    ${item.time}
+                </button>
+
+                <button class="alarm-toggle ${item.enabled ? "on" : "off"}" data-action="toggle-alarm" data-index="${actualIndex}" type="button">
+                    ${item.enabled ? "ON" : "OFF"}
+                </button>
+            </div>
         `;
         
     }).join("");

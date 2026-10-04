@@ -1,8 +1,13 @@
+export interface AlarmItem {
+    time: string;
+    enabled: boolean;
+}
+
 export interface AlarmState {
     hours: number;
     minutes: number;
-    alarms: string[];
-    selectedIndex: number | null;
+    alarms: AlarmItem[];
+    selectedIndexs: number[];
 }
 
 // export type AlarmState = 

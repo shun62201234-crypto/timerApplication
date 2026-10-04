@@ -167,7 +167,7 @@ function addAlarm(): void {
     /** ピッカーで設定した値を使用 */
     const time = `${pad(state.picker.hour)}:${pad(state.picker.minute)}`;
 
-    state.alarm.alarms.push(time);
+    state.alarm.alarms.push({time, enabled: true});
     
     /** アラーム側の現在値も更新 */
     state.alarm.hours = state.picker.hour;
@@ -179,21 +179,40 @@ function addAlarm(): void {
 }
 
 function selectAlarm(index: number): void {
-    state.alarm.selectedIndex = index;
+    const selectedIndexes = state.alarm.selectedIndexs;
+    const selectedIndex = selectedIndexes.indexOf(index);
+
+    if (selectedIndex === 1) {
+        selectedIndexes.push(index);
+    } else {
+        selectedIndexes.splice(selectedIndex, 1);
+    }
+
+    render();
+}
+
+function toggleAlarm(index: number): void {
+    const alarm = state.alarm.alarms[index];
+
+    if (!alarm) {
+        return;
+    }
 
     render();
 }
 
 function deleteAlarm(): void {
-    const index = state.alarm.selectedIndex;
+    const selectedIndexes = state.alarm.selectedIndexs;
 
-    if (index === null) {
+    if (selectedIndexes.length === 0) {
         return;
     }
 
-    state.alarm.alarms.splice(index, 1);
+    [...selectedIndexes].sort((a,b) => b - a).forEach((index) => {
+        state.alarm.alarms.splice(index, 1);
+    });
 
-    state.alarm.selectedIndex = null;
+    state.alarm.selectedIndexs = [];
 
     render();
 }
@@ -417,22 +436,6 @@ function scrollToPickerValue(type: "hour" | "minute" | "second", value: number,)
 
     container.scrollTop = scrollTop;
 
-    // const items = Array.from(container.querySelectorAll<HTMLElement>(".picker-item",),);
-
-    // let valueCount = 0;
-
-    // items.forEach((item) => {
-    //     const itemValue = Number(item.dataset.value ?? 0);
-
-    //     let selected = false;
-
-    //     if (itemValue === value) {
-    //         valueCount++;
-    //     }
-
-    //     item.classList.toggle("selected", selected);
-    // });
-
     requestAnimationFrame(() =>{
         container.style.scrollSnapType = originalSnap || "y mandatory";
     });
@@ -481,10 +484,15 @@ app.addEventListener("click",(event) => {
             break;
         
         case "select-alarm": {
-            const index = Number (actionElement.dataset.index,)
+            const index = Number(actionElement.dataset.index);
             selectAlarm(index);
             break;
         };
+
+        case "toggle-alarm":
+            const index = Number(actionElement.dataset.index);
+            toggleAlarm(index);
+            break;
         
         case "delete-alarm":
             deleteAlarm();
