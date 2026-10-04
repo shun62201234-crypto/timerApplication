@@ -397,8 +397,8 @@ function scrollToPickerValue(type: "hour" | "minute" | "second", value: number,)
         return;
     }
 
-    const itemHeight = 42;
-    const spacerHeight = 42;
+    const itemHeight = 45;
+    const spacerHeight = 45;
 
     const max = type === "hour" ? 24: 60;
 

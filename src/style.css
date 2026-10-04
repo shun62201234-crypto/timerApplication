@@ -13,27 +13,30 @@ html, body {
 
 body {
     min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* === アプリ全体 === */
 .app {
-    width: calc(100% - 4px);
-    max-width: 385px;
-    min-height: 270px;
+    width: min(420px, calc(100vw - 20px));
+    /* height: 34vh;
+    max-width: 420px; */
+    min-height: 290px;
 
-    margin: 2px auto 0;
+    margin: 0;
+    padding-top: 18px;
+    padding-bottom: 18px;
 
-    padding-top: 15px;
-
-    border: #777 1px solid;
-
+    border: #777 2px solid;
     background: #fff;
 }
 
 /* === タブ === */
 .tabs {
-    width: 225px;
-    height: 20px;
+    width: 240px;
+    height: 32px;
     margin: 0 auto;
 
     display: flex;
@@ -43,7 +46,7 @@ body {
 
 .tab {
     width: 50%;
-    height: 20px;
+    height: 32px;
 
     padding: 0;
     
@@ -53,8 +56,8 @@ body {
     background: #d1cecf;
     color: #fff;
 
-    font-size: 11px;
-    line-height: 20px;
+    font-size: 12px;
+    line-height: 32px;
 
     cursor: pointer;
 }
@@ -96,7 +99,7 @@ body {
 /* 初期状態 00 ： 00 ： 00 を画面中央に表示 */
 .time-picker-closed {
     width: 100%;
-    height: 126px;
+    height: 135px;
 
     margin: 0;
     padding: 0;
@@ -110,7 +113,7 @@ body {
 
     color: #000;
     font-family: Arial, "Noto Sans JP", "Yu Gothic", YuGothic, sans-serif;
-    font-size: 38px;
+    font-size: 42px;
     font-weight: 400;
     line-height: 1;
 
@@ -144,7 +147,6 @@ body {
     line-height: 1;
 }
 
-
 /* === タイマー操作ボタン === */
 .timer-actions {
     margin-top: 0;
@@ -156,24 +158,26 @@ body {
 }
 
 .timer-actions .btn {
-    min-width: 58px;
+    width: 100px;
+    min-width: 100px;
+    height: 32px;
 }
 
 /* === タイマー履歴 === */
 .history {
-    width: 270px;
-    height: 100px;
+    width: 290px;
+    height: 110px;
 
-    margin: 10px auto 0;
+    margin: 12px auto 0;
 
     border: 1px solid #bcbcbc;
     background: #fff;
 }
 
 .history-title {
-    margin: 8px 0 0 13px;
+    margin: 9px 0 0 14px;
 
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 400;
 }
 
@@ -182,6 +186,12 @@ body {
     height: 72px;
 
     overflow-y: auto;
+}
+
+.history-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
 }
 
 /* === アラーム画面 === */
@@ -203,18 +213,19 @@ body {
 .add-button {
     display: block;
 
-    width: 95px;
-    height: 29px;
+    width: 100px;
+    min-width: 100px;
+    height: 32px;
 
-    margin: 0 auto;
+    margin: 0 auto 12px;
 
     font-size: 12px;
 }
 
 /* === アラーム一覧 === */
 .alarm-list {
-    width: 270px;
-    height: 106px;
+    width: 290px;
+    height: 115px;
 
     margin: 0 auto;
 
@@ -225,9 +236,9 @@ body {
 }
 
 .alarm-title {
-    margin: 8px 0 0 12px;
+    margin: 9px 0 0 14px;
 
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 400;
 }
 
@@ -281,7 +292,7 @@ body {
 /* === 共通ピッカー === */
 .time-picker {
     width: 100%;
-    height: 126px;
+    height: 135px;
 
     margin: 0;
     padding: 0;
@@ -295,7 +306,7 @@ body {
 
 /* === ピッカー全体 === */
 .picker-container {
-    height: 126px;
+    height: 135px;
 
     display: flex;
     justify-content: center;
@@ -306,8 +317,8 @@ body {
 
 /* === 時・分・秒それぞれの列 === */
 .picker-column {
-    width: 58px;
-    height: 126px;
+    width: 62px;
+    height: 135px;
 
     display: flex;
     justify-content: center;
@@ -315,8 +326,8 @@ body {
 
 /* === スクロールする領域 === */
 .picker {
-    width: 58px;
-    height: 126px;
+    width: 62px;
+    height: 135px;
 
     margin: 0;
     padding: 0;
@@ -337,7 +348,7 @@ body {
 
 /* === ピッカーの数字 === */
 .picker-item {
-    height: 42px;
+    height: 45px;
 
     display: flex;
     justify-content: center;
@@ -348,10 +359,10 @@ body {
     color: #bdbdbd;
 
     font-family: Arial, "Noto Sans JP", "Yu Gothic", YuGothic, sans-serif;
-    font-size: 30px;
+    font-size: 32px;
     font-weight: 400;
 
-    line-height: 42px;
+    line-height: 45px;
 
     cursor: default;
 }
@@ -372,11 +383,11 @@ body {
 
 /* === タイマー用ピッカー === */
 .timer-screen .picker-item {
-    font-size: 30px;
+    font-size: 32px;
 }
 
 .timer-screen .picker-item.selected {
-    font-size: 38px;
+    font-size: 40px;
 }
 
 /* === アラーム用ピッカー === */
