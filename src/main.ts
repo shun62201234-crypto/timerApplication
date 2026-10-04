@@ -58,6 +58,8 @@ function startTimer(): void {
         return;
     }
 
+    const completedTime = `${pad(state.picker.hour)}:${pad(state.picker.minute)}:${pad(state.picker.second)}`;
+
     /** ピッカーの値を実際のタイマーへ確定。*/
     state.timer.hours = state.picker.hour;
     state.timer.minutes = state.picker.minute;
@@ -82,6 +84,12 @@ function startTimer(): void {
 
         /** 終了 */
         if (currentSeconds <= 1) {
+            state.timer.history.unshift(completedTime);
+
+            if (state.timer.history.length > 5) {
+                state.timer.history.pop();
+            }
+            
             state.timer.hours = 0;
             state.timer.minutes = 0;
             state.timer.seconds = 0;
@@ -233,7 +241,7 @@ function setupPickerScroll(): void {
             updatePickerValue(picker);
             updatePickerSelectedStyle(picker);
             updateStartButtonState();
-        },);
+        });
     });
 }
 
@@ -306,9 +314,7 @@ function updatePickerSelectedStyle(
 
         const itemCenter = rect.top + rect.height / 2;
 
-        const distance = Math.abs(
-            itemCenter - containerCenter,
-        );
+        const distance = Math.abs(itemCenter - containerCenter);
 
         if (distance < closestDistance) {
             closestDistance = distance;
@@ -317,10 +323,7 @@ function updatePickerSelectedStyle(
     }
 
     items.forEach((item) => {
-        item.classList.toggle(
-            "selected",
-            item === closestItem,
-        );
+        item.classList.toggle("selected", item === closestItem);
     });
 }
 
@@ -374,7 +377,7 @@ function scrollPickerToSelectedValue(): void {
 
         requestAnimationFrame(() => {
 
-            const pickers = app?.querySelectorAll<HTMLElement>("[data-picker]",);
+            const pickers = app?.querySelectorAll<HTMLElement>("[data-picker]");
 
             pickers?.forEach((picker) =>{
                 updatePickerSelectedStyle(picker);
@@ -410,25 +413,25 @@ function scrollToPickerValue(type: "hour" | "minute" | "second", value: number,)
 
     const originalSnap = container.style.scrollSnapType;
 
-    container.style.scrollSnapType;
+    container.style.scrollSnapType = "none";
 
     container.scrollTop = scrollTop;
 
-    const items = Array.from(container.querySelectorAll<HTMLElement>(".picker-item",),);
+    // const items = Array.from(container.querySelectorAll<HTMLElement>(".picker-item",),);
 
-    let valueCount = 0;
+    // let valueCount = 0;
 
-    items.forEach((item) => {
-        const itemValue = Number(item.dataset.value ?? 0);
+    // items.forEach((item) => {
+    //     const itemValue = Number(item.dataset.value ?? 0);
 
-        let selected = false;
+    //     let selected = false;
 
-        if (itemValue === value) {
-            valueCount++;
-        }
+    //     if (itemValue === value) {
+    //         valueCount++;
+    //     }
 
-        item.classList.toggle("selected", selected);
-    });
+    //     item.classList.toggle("selected", selected);
+    // });
 
     requestAnimationFrame(() =>{
         container.style.scrollSnapType = originalSnap || "y mandatory";
@@ -440,7 +443,7 @@ function scrollToPickerValue(type: "hour" | "minute" | "second", value: number,)
 app.addEventListener("click",(event) => {
     const target = event.target as HTMLElement;
 
-    const actionElement = target.closest<HTMLElement>("[data-action]",);
+    const actionElement = target.closest<HTMLElement>("[data-action]");
 
     if (!actionElement) {
         return;

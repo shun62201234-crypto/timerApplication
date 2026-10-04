@@ -28,7 +28,6 @@ export const state: AppState = {
         minutes: 0,
         alarms: [],
         selectedIndex: null,
-        history: [],
     },
 
     picker: {
