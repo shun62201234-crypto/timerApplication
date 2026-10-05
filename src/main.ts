@@ -182,7 +182,7 @@ function selectAlarm(index: number): void {
     const selectedIndexes = state.alarm.selectedIndexs;
     const selectedIndex = selectedIndexes.indexOf(index);
 
-    if (selectedIndex === 1) {
+    if (selectedIndex === -1) {
         selectedIndexes.push(index);
     } else {
         selectedIndexes.splice(selectedIndex, 1);
@@ -197,6 +197,8 @@ function toggleAlarm(index: number): void {
     if (!alarm) {
         return;
     }
+
+    alarm.enabled = !alarm.enabled;
 
     render();
 }
@@ -489,10 +491,11 @@ app.addEventListener("click",(event) => {
             break;
         };
 
-        case "toggle-alarm":
+        case "toggle-alarm": {
             const index = Number(actionElement.dataset.index);
             toggleAlarm(index);
             break;
+        }
         
         case "delete-alarm":
             deleteAlarm();
